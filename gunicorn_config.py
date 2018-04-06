@@ -27,7 +27,10 @@ loglevel = 'info'
 reload = True
 debug = False
 
-
+if not os.path.exists('run'):
+	os.mkdir('run')
+if not os.path.exists('logs'):
+	os.mkdir('logs')
 
 bind = "%s:%s" % ("0.0.0.0", 50080)
 pidfile = '%s/run/%s.pid' % (path_of_current_dir, _file_name)
