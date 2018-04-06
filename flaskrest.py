@@ -1,0 +1,94 @@
+# -*- coding: utf-8 -*-
+
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+
+from getAllInfo import Student
+from db import Dao
+
+app = Flask(__name__)
+app.config['JSON_AS_ASCII'] = False
+CORS(app, supports_credentials=True)
+
+dao = Dao()
+confirmed_account = dao.get_all_account()
+
+
+@app.route('/api_v1/get_baseinfo', methods=['POST', 'GET'])
+def get_baseinfo():
+    str_account = request.form.get('account')
+    account = int(str_account)
+    passwd = request.form.get('passwd')
+    if confirm(account, passwd):
+        baseinfo = dao.get_baseinfo(account)
+        return jsonify({'code': 0, 'baseinfo': baseinfo})
+    else:
+        return jsonify({'code': 1, 'msg': 'no info of %s' % account})
+
+
+@app.route('/api_v1/get_score', methods=['POST', 'GET'])
+def get_score():
+    str_account = request.form.get('account')
+    account = int(str_account)
+    passwd = request.form.get('passwd')
+    xq = request.form.get('xq')
+    if confirm(account, passwd):
+        scores = dao.get_scores(account, xq)
+        scores['code'] = 0
+        return jsonify(scores)
+    else:
+        return jsonify({'code': 1, 'msg': 'no scores of %s' % account})
+
+
+@app.route('/api_v1/get_all_class', methods=['POST', 'GET'])
+def get_all_class():
+    str_account = request.form.get('account')
+    account = int(str_account)
+    passwd = request.form.get('passwd')
+    if confirm(account, passwd):
+        classes = dao.get_classes(account)
+        classes['code'] = 0
+        return jsonify(classes)
+    else:
+        return jsonify({'code': 1, 'msg': 'can not find class of %s'})
+
+
+@app.route('/api_v1/auth', methods=['POST', 'GET'])
+def auth():
+    str_account = request.form.get('account')
+    account = int(str_account)
+    passwd = request.form.get('passwd')
+    if confirm(account, passwd):
+        return jsonify({'code': 0, 'msg': 'login success'})
+    else:
+        return jsonify({'code': 1, 'msg': 'account or password wrong'})
+
+
+def confirm(account, passwd, getAllinfo=True):
+    if account in confirmed_account and passwd == confirmed_account[account]:
+        return True
+    else:
+        stu = Student(Account=account, PWD=passwd)
+        login_status = stu.login()
+        if login_status:
+            confirmed_account[account] = passwd
+            # 将数据库中没有的用户 加入数据库
+            dao.insert_account(account, passwd)
+
+            if getAllinfo:
+                scores = stu.getScore()
+                classes = stu.getKeBiao()
+                baseinfo = stu.getBaseinfo()
+
+                dao.insert_scores(scores)
+                dao.insert_classes(classes)
+                dao.insert_baseinfo(baseinfo)
+        return login_status
+
+
+def main():
+    app.run(host='127.0.0.1', port=50080, debug=True)
+
+
+if __name__ == '__main__':
+    main()
