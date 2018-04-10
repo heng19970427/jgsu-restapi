@@ -11,3 +11,4 @@ while True:
     classes,xq,zc = stu.getKeBiao()
     dao.update_xqzc(xq,zc)
     time.sleep(86400)
+    
