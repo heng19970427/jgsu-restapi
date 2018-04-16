@@ -47,7 +47,10 @@ def get_all_class():
     passwd = request.form.get('passwd')
     if confirm(account, passwd):
         classes = dao.get_classes(account)
+        xqzc = dao.get_xqzc()
         classes['code'] = 0
+        classes['zc'] = xqzc['zc']
+        classes['xq'] = xqzc['xq']
         return jsonify(classes)
     else:
         return jsonify({'code': 1, 'msg': 'can not find class of %s'})
@@ -77,9 +80,9 @@ def confirm(account, passwd, getAllinfo=True):
 
             if getAllinfo:
                 scores = stu.getScore()
-                classes = stu.getKeBiao()
+                classes,xq,zc = stu.getKeBiao()
                 baseinfo = stu.getBaseinfo()
-
+                dao.update_xqzc(xq,zc)
                 dao.insert_scores(scores)
                 dao.insert_classes(classes)
                 dao.insert_baseinfo(baseinfo)
@@ -87,7 +90,7 @@ def confirm(account, passwd, getAllinfo=True):
 
 
 def main():
-    app.run(host='127.0.0.1', port=50080, debug=True)
+    app.run(host='0.0.0.0', port=50080, debug=True)
 
 
 if __name__ == '__main__':

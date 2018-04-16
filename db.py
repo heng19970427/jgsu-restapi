@@ -1,7 +1,21 @@
+import time
 class Dao:
     from pymongo import MongoClient
     client = MongoClient(host='127.0.0.1')
     db = client.JGSU
+    def update_xqzc(self,xq,zc):
+        col = self.db['nowtime']
+        todaydate = time.strftime("%Y-%m-%d", time.localtime())
+        xqzc_info = {
+            'xq':xq,
+            'zc':zc,
+            'lastupdate':todaydate
+        }
+        info = col.find_one({})
+        if info is None:
+            col.insert(xqzc_info)
+        else:
+            col.update({'_id':info['_id']},{'$set':xqzc_info})
 
     def insert_account(self, account, passwd):
         acc_info = {'id': account, 'passwd': passwd}
@@ -39,6 +53,11 @@ class Dao:
                 # 直接覆盖原来的
                 col.save(classes)
 
+    def get_xqzc(self):
+        col = self.db['nowtime']
+        xqzc = col.find_one({},{'_id':0})
+        return xqzc
+
     def get_all_account(self):
         col = self.db['account']
         accounts = {}
@@ -71,20 +90,20 @@ class Dao:
 
 def main():
     dao = Dao()
-    dao.insert_account(1609103050, 'xiaoliu...')
+    dao.insert_account(1609103050, '1609103050')
     dao.insert_baseinfo({
         "id": 1609103050,
-        "name": "衡玉良",
-        "brithday": "1997-04-27",
+        "name": "XXX",
+        "brithday": "1997-2-2",
         "degree": "本科",
         "when": "2016",
-        "kaohao": "16411715150867",
-        "idnum": "411323199704274472",
+        "kaohao": "1777777777777",
+        "idnum": "411111111111111111",
         "xueyuan": "电子与信息工程学院",
         "major": "计算机科学与技术",
         "xuezhi": "4.0",
         "class": "计算机16(本3)",
-        "img": "http://xuanke.jgsu.edu.cn/upload/XSXX/1609103050.jpg"
+        "img": "http://xuanke"
     })
     scores = {
         "id": 1609103050,

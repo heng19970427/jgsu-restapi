@@ -139,9 +139,13 @@ class Student:
             sess = self.sess
             r = sess.post(self.BaseUrl + 'pkgl/XsKB_List.aspx?usermain=' + self.usermain, headers=self.headers)
             soup = BeautifulSoup(r.text, 'lxml')
+            with open('kebiao.html','w+') as fp:
+                fp.write(r.text)
+            nowtime = soup.find_all('option',attrs={'selected': 'selected'})
+            ddlxnxqh = nowtime[0].get('value')
+            zc = nowtime[1].get('value')
             __VIEWSTATE = soup.find('input', attrs={'id': '__VIEWSTATE'}).get('value')
             __VIEWSTATEGENERATOR = soup.find('input', attrs={'id': '__VIEWSTATEGENERATOR'}).get('value')
-            ddlxnxqh = soup.find('option', attrs={'selected': 'selected'}).get('value')
             data = {
                 '__EVENTTARGET': 'zc',
                 '__EVENTARGUMENT': '',
@@ -165,7 +169,7 @@ class Student:
                     kv = item.split(':')
                     temp[kv[0]] = kv[1]
                 all_class.append(temp)
-            return {'id': self.Account, 'classes': all_class}
+            return {'id': self.Account, 'classes': all_class},ddlxnxqh,zc
 
     def getBaseinfo(self):
         sess = self.sess
@@ -201,8 +205,8 @@ if __name__ == '__main__':
         kb = stu.getKeBiao()
         score = stu.getScore()
         baseinfo = stu.getBaseinfo()
-        print(json.dumps(kb, ensure_ascii=False, indent=2))
-        print(json.dumps(score, ensure_ascii=False, indent=2))
-        print(json.dumps(baseinfo, ensure_ascii=False, indent=2))
+        # print(json.dumps(kb, ensure_ascii=False, indent=2))
+        # print(json.dumps(score, ensure_ascii=False, indent=2))
+        # print(json.dumps(baseinfo, ensure_ascii=False, indent=2))
     else:
         print('登录失败！')
