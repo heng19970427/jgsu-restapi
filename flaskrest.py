@@ -61,6 +61,17 @@ def auth():
     str_account = request.form.get('account')
     account = int(str_account)
     passwd = request.form.get('passwd')
+    if get_all(account, passwd):
+        return jsonify({'code': 0, 'msg': 'update success'})
+    else:
+        return jsonify({'code': 1, 'msg': 'account or password wrong'})
+
+
+@app.route('/api_v1/refresh', methods=['POST', 'GET'])
+def refresh():
+    str_account = request.form.get('account')
+    account = int(str_account)
+    passwd = request.form.get('passwd')
     if confirm(account, passwd):
         return jsonify({'code': 0, 'msg': 'login success'})
     else:
@@ -71,23 +82,23 @@ def confirm(account, passwd, getAllinfo=True):
     if account in confirmed_account and passwd == confirmed_account[account]:
         return True
     else:
-        stu = Student(Account=account, PWD=passwd)
-        login_status = stu.login()
-        if login_status:
-            confirmed_account[account] = passwd
-            # 将数据库中没有的用户 加入数据库
-            dao.insert_account(account, passwd)
+        return get_all(account,passwd)
 
-            if getAllinfo:
-                scores = stu.getScore()
-                classes,xq,zc = stu.getKeBiao()
-                baseinfo = stu.getBaseinfo()
-                dao.update_xqzc(xq,zc)
-                dao.insert_scores(scores)
-                dao.insert_classes(classes)
-                dao.insert_baseinfo(baseinfo)
-        return login_status
-
+def get_all(account,passwd):
+    stu = Student(Account=account, PWD=passwd)
+    login_status = stu.login()
+    if login_status:
+        confirmed_account[account] = passwd
+        # 将数据库中没有的用户 加入数据库
+        dao.insert_account(account, passwd)
+        scores = stu.getScore()
+        classes,xq,zc = stu.getKeBiao()
+        baseinfo = stu.getBaseinfo()
+        dao.update_xqzc(xq,zc)
+        dao.insert_scores(scores)
+        dao.insert_classes(classes)
+        dao.insert_baseinfo(baseinfo)
+    return login_status
 
 def main():
     app.run(host='0.0.0.0', port=50080, debug=True)
