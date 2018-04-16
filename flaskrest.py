@@ -61,7 +61,7 @@ def auth():
     str_account = request.form.get('account')
     account = int(str_account)
     passwd = request.form.get('passwd')
-    if get_all(account, passwd):
+    if confirm(account, passwd):
         return jsonify({'code': 0, 'msg': 'login success'})
     else:
         return jsonify({'code': 1, 'msg': 'account or password wrong'})
@@ -72,7 +72,7 @@ def refresh():
     str_account = request.form.get('account')
     account = int(str_account)
     passwd = request.form.get('passwd')
-    if confirm(account, passwd):
+    if get_all(account, passwd):
         return jsonify({'code': 0, 'msg': 'update success'})
     else:
         return jsonify({'code': 1, 'msg': 'account or password wrong'})
