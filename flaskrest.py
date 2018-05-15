@@ -18,7 +18,7 @@ confirmed_account = dao.get_all_account()
 @app.route('/api_v1/auto_anwser', methods=['POST', 'GET'])
 def auto_anwser():
     url = request.form.get('url')
-    score = request.form.get('score')
+    score = int(request.form.get('score'))
     auto = AutoAnwser()
     userid = auto.GetQueryString('userid')
     if userid is None or auto.GetQueryString('IP') is None or score <= 0 or score > 100:
