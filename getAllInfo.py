@@ -141,7 +141,7 @@ class Student:
             soup = BeautifulSoup(r.text, 'lxml')
             with open('kebiao.html','w+') as fp:
                 fp.write(r.text)
-            nowtime = soup.find_all('option',attrs={'selected': 'selected'})
+            nowtime = soup.find_all('option', attrs={'selected': 'selected'})
             ddlxnxqh = nowtime[0].get('value')
             zc = nowtime[1].get('value')
             __VIEWSTATE = soup.find('input', attrs={'id': '__VIEWSTATE'}).get('value')
