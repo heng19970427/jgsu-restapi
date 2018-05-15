@@ -49,10 +49,8 @@ class AutoAnwser:
             "submitanswer": submitanswer,
             "istrue": istrue
         }
-        print(data)
         submit_url = 'http://' + address + '/phone/examSystemController/submitMockExamAnswer?rnd=' + str(
             random.random())
-        print(submit_url)
         resp = self.sess.post(url=submit_url, headers=self.headers, data=data)
         return resp.text
 
@@ -94,7 +92,6 @@ class AutoAnwser:
                 istrue = 1
             print(stage_questionid, submitanswer)
             result = self.submit(address, int(userid), testpaperid, stage_questionid, submitanswer, istrue)
-            print(result)
             time.sleep(random.randint(1, 3))
         if self.finish(address, userid, testpaperid, score, 100-score, 0):
             print('提交成功')
