@@ -7,7 +7,7 @@ from threading import Thread
 
 
 class AutoAnwser:
-    url = 'http://jdvxexam.jxkth.com/jdwxexam/test_v3/test_v1.html?userid=11&IP=120.78.218.238:8500/jdwxexam'
+    url = ''
     sess = requests.session()
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36'
@@ -100,5 +100,6 @@ class AutoAnwser:
 
 if __name__ == '__main__':
     auto = AutoAnwser()
+    auto.url = 'http://jdvxexam.jxkth.com/jdwxexam/test_v3/test_v1.html?userid=11&IP=120.78.218.238:8500/jdwxexam'
     # auto.run(想要的分数)
     auto.run(90)
