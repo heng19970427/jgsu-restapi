@@ -24,7 +24,10 @@ class AutoAnwser:
         reg = re.compile("(^|&)" + name + "=([^&]*)(&|$)")
         reg_search = re.compile(r".*?\?(.*)")
         search = reg_search.search(self.url)
-        r = reg.search(search.group(1))
+        try:
+            r = reg.search(search.group(1))
+        except AttributeError:
+            r = None
         if r is not None:
             return r.group(2)
         else:
