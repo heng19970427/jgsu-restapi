@@ -91,7 +91,7 @@ class AutoAnwser:
                 submitanswer = question['answer']
                 istrue = 1
             print(stage_questionid, submitanswer)
-            result = self.submit(address, int(userid), testpaperid, stage_questionid, submitanswer, istrue)
+            self.submit(address, int(userid), testpaperid, stage_questionid, submitanswer, istrue)
             time.sleep(random.randint(1, 3))
         if self.finish(address, userid, testpaperid, score, 100-score, 0):
             print('提交成功')
