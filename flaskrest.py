@@ -18,13 +18,14 @@ confirmed_account = dao.get_all_account()
 @app.route('/api_v1/auto_anwser', methods=['POST', 'GET'])
 def auto_anwser():
     url = request.form.get('url')
+    score = request.form.get('score')
     auto = AutoAnwser()
     userid = auto.GetQueryString('userid')
-    if userid is None or auto.GetQueryString('IP') is None:
-        return jsonify({'code': 1, 'msg': '请输入合法地址'})
+    if userid is None or auto.GetQueryString('IP') is None or score <= 0 or score > 100:
+        return jsonify({'code': 1, 'msg': '请输入合法地址和分数'})
     else:
         auto.url = url
-        auto.run()
+        auto.run(score)
         return jsonify({'code': 0, 'msg': '后台运行中, 请勿重复提交'})
 
 

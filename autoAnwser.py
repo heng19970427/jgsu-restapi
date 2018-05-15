@@ -72,28 +72,36 @@ class AutoAnwser:
             return False
 
     @async
-    def run(self):
+    def run(self, score):
         userid = self.GetQueryString('userid')
         address = self.GetQueryString('IP')
         test_text = self.GetExercises(address, userid)
         stateValue = json.loads(test_text['stateValue'])
         testpaperid = stateValue['testpaperid']
+        geted_score = 0
         for question in stateValue['stage_questionJson']:
-            stage_questionid = question['id']
-            submitanswer = question['answer']
-            istrue = 1
+            geted_score += 1
+            if geted_score > score:
+                stage_questionid = question['id']
+                if question['answer'] == 'A':
+                    submitanswer = 'B'
+                else:
+                    submitanswer = 'A'
+                istrue = 2
+            else:
+                stage_questionid = question['id']
+                submitanswer = question['answer']
+                istrue = 1
             print(stage_questionid, submitanswer)
             result = self.submit(address, int(userid), testpaperid, stage_questionid, submitanswer, istrue)
             print(result)
-            time.sleep(random.randint(3, 5))
-        if self.finish(address, userid, testpaperid, 100, 0, 0):
+            time.sleep(random.randint(1, 3))
+        if self.finish(address, userid, testpaperid, score, 100-score, 0):
             print('提交成功')
+            return True
 
 
 if __name__ == '__main__':
     auto = AutoAnwser()
-    print(0)
-    auto.run()
-    print(1)
-
-
+    # auto.run(想要的分数)
+    auto.run(90)
