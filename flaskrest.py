@@ -31,9 +31,9 @@ def auto_anwser():
 
 @app.route('/api_v1/get_baseinfo', methods=['POST', 'GET'])
 def get_baseinfo():
-    str_account = request.form.get('account')
-    account = int(str_account)
-    passwd = request.form.get('passwd')
+    user = request.get_json(silent=True)
+    account = user.get('account')
+    passwd = user.get('passwd')
     if confirm(account, passwd):
         baseinfo = dao.get_baseinfo(account)
         return jsonify({'code': 0, 'baseinfo': baseinfo})
@@ -43,9 +43,9 @@ def get_baseinfo():
 
 @app.route('/api_v1/get_score', methods=['POST', 'GET'])
 def get_score():
-    str_account = request.form.get('account')
-    account = int(str_account)
-    passwd = request.form.get('passwd')
+    user = request.get_json(silent=True)
+    account = user.get('account')
+    passwd = user.get('passwd')
     xq = request.form.get('xq')
     if confirm(account, passwd):
         scores = dao.get_scores(account, xq)
@@ -57,9 +57,9 @@ def get_score():
 
 @app.route('/api_v1/get_all_class', methods=['POST', 'GET'])
 def get_all_class():
-    str_account = request.form.get('account')
-    account = int(str_account)
-    passwd = request.form.get('passwd')
+    user = request.get_json(silent=True)
+    account = user.get('account')
+    passwd = user.get('passwd')
     if confirm(account, passwd):
         classes = dao.get_classes(account)
         xqzc = dao.get_xqzc()
@@ -73,9 +73,9 @@ def get_all_class():
 
 @app.route('/api_v1/auth', methods=['POST', 'GET'])
 def auth():
-    str_account = request.form.get('account')
-    account = int(str_account)
-    passwd = request.form.get('passwd')
+    user = request.get_json(silent=True)
+    account = user.get('account')
+    passwd = user.get('passwd')
     if confirm(account, passwd):
         return jsonify({'code': 0, 'msg': 'login success'})
     else:
@@ -84,9 +84,9 @@ def auth():
 
 @app.route('/api_v1/refresh', methods=['POST', 'GET'])
 def refresh():
-    str_account = request.form.get('account')
-    account = int(str_account)
-    passwd = request.form.get('passwd')
+    user = request.get_json(silent=True)
+    account = user.get('account')
+    passwd = user.get('passwd')
     if get_all(account, passwd):
         return jsonify({'code': 0, 'msg': 'update success'})
     else:

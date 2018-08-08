@@ -143,7 +143,7 @@ class Student:
                 fp.write(r.text)
             nowtime = soup.find_all('option', attrs={'selected': 'selected'})
             ddlxnxqh = nowtime[0].get('value')
-            zc = nowtime[1].get('value')
+            nowzc = nowtime[1].get('value')
             __VIEWSTATE = soup.find('input', attrs={'id': '__VIEWSTATE'}).get('value')
             __VIEWSTATEGENERATOR = soup.find('input', attrs={'id': '__VIEWSTATEGENERATOR'}).get('value')
             data = {
@@ -169,7 +169,29 @@ class Student:
                     kv = item.split(':')
                     temp[kv[0]] = kv[1]
                 all_class.append(temp)
-            return {'id': self.Account, 'classes': all_class},ddlxnxqh,zc
+            for c in all_class:
+                zc = c['上课周次']
+                temp = []
+                if zc.isnumeric():
+                    temp.append(int(zc))
+                else:
+                    if "," in zc:
+                        temp.append(int(zc.split(",")[0]))
+                        zc = zc.split(",")[1]
+                    if "双周" in zc:
+                        zc = zc.replace("双周","")
+                        zcr = zc.split("-")
+                        temp.extend(list(filter(lambda a: a%2==0, range(int(zcr[0]),int(zcr[1])+1))))
+                    elif "单周" in zc:
+                        zc = zc.replace("单周","")
+                        zcr = zc.split("-")
+                        temp.extend(list(filter(lambda a: a%2==1, range(int(zcr[0]),int(zcr[1])+1))))
+                    else:
+                        zcr = zc.split("-")
+                        temp.extend(range(int(zcr[0]),int(zcr[1])+1))
+                c['上课周次'] = temp
+
+            return {'id': self.Account, 'classes': all_class},ddlxnxqh,nowzc
 
     def getBaseinfo(self):
         sess = self.sess
