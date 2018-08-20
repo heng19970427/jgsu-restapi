@@ -62,7 +62,7 @@ class Student:
                     a[r][c] = 0
         # 去除单独噪点
         for r in range(len(a)):
-            for c in range(len(a[r])):
+            for c in range(len(a[r]-1)):
                 if a[r][c] == 0 and (a[r][c - 1] == 1 and a[r][c + 1] == 1):
                     a[r][c] = 1
         # 转为灰度照片

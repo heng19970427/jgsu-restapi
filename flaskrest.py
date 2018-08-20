@@ -2,6 +2,7 @@
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import json
 
 from getAllInfo import Student
 from autoAnwser import AutoAnwser
@@ -31,7 +32,7 @@ def auto_anwser():
 
 @app.route('/api_v1/get_baseinfo', methods=['POST', 'GET'])
 def get_baseinfo():
-    user = request.get_json(silent=True)
+    user = json.loads(request.get_data())
     account = user.get('account')
     passwd = user.get('passwd')
     if confirm(account, passwd):
@@ -43,7 +44,7 @@ def get_baseinfo():
 
 @app.route('/api_v1/get_score', methods=['POST', 'GET'])
 def get_score():
-    user = request.get_json(silent=True)
+    user = json.loads(request.get_data())
     account = user.get('account')
     passwd = user.get('passwd')
     xq = request.form.get('xq')
@@ -57,7 +58,7 @@ def get_score():
 
 @app.route('/api_v1/get_all_class', methods=['POST', 'GET'])
 def get_all_class():
-    user = request.get_json(silent=True)
+    user = json.loads(request.get_data())
     account = user.get('account')
     passwd = user.get('passwd')
     if confirm(account, passwd):
@@ -73,7 +74,7 @@ def get_all_class():
 
 @app.route('/api_v1/auth', methods=['POST', 'GET'])
 def auth():
-    user = request.get_json(silent=True)
+    user = json.loads(request.get_data())
     account = user.get('account')
     passwd = user.get('passwd')
     if confirm(account, passwd):
@@ -84,7 +85,7 @@ def auth():
 
 @app.route('/api_v1/refresh', methods=['POST', 'GET'])
 def refresh():
-    user = request.get_json(silent=True)
+    user = json.loads(request.get_data())
     account = user.get('account')
     passwd = user.get('passwd')
     if get_all(account, passwd):
